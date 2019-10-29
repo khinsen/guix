@@ -1193,17 +1193,17 @@ similar to MATLAB, GNU Octave or SciPy.")
 (define-public netcdf
   (package
     (name "netcdf")
-    (version "4.4.1.1")
+    (version "4.7.2")
     (source
      (origin
        (method url-fetch)
-       (uri (string-append "ftp://ftp.unidata.ucar.edu/pub/netcdf/"
-                           "netcdf-" version ".tar.gz"))
+       (uri (string-append "https://github.com/Unidata/netcdf-c/archive/v"
+                           version ".tar.gz"))
+       (file-name (string-append "netcdf-" version ".tar.gz"))
        (sha256
         (base32
-         "1blc7ik5yin7i0ls2kag0a9xjk12m0dzx6v1x88az3ras3scci2d"))
-       (patches (search-patches "netcdf-date-time.patch"
-                                "netcdf-tst_h_par.patch"))))
+         "170qz3gjs70g2vywv7d493g6fq17gfpjaip6gf7ikpazsxxxnj3n"))
+       (patches (search-patches "netcdf-date-time.patch"))))
     (build-system gnu-build-system)
     (native-inputs
      `(("m4" ,m4)
@@ -1213,7 +1213,8 @@ similar to MATLAB, GNU Octave or SciPy.")
      `(("hdf4" ,hdf4-alt)
        ("hdf5" ,hdf5)
        ("zlib" ,zlib)
-       ("libjpeg" ,libjpeg)))
+       ("libjpeg" ,libjpeg)
+       ("curl" ,curl)))
     (arguments
      `(#:configure-flags '("--enable-doxygen" "--enable-dot" "--enable-hdf4")
 

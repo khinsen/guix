@@ -1,11 +1,11 @@
 --- a/libdispatch/derror.c
 +++ b/libdispatch/derror.c
-@@ -13,7 +13,7 @@
- #endif
+@@ -14,7 +14,7 @@
  
- /* Tell the user the version of netCDF. */
+ /** @internal The version string for the library, used by
+  * nc_inq_libvers(). */
 -static const char nc_libvers[] = PACKAGE_VERSION " of "__DATE__" "__TIME__" $";
 +static const char nc_libvers[] = PACKAGE_VERSION" $";
  
  /**
- \defgroup lib_version Library Version
+ Return the library version.
