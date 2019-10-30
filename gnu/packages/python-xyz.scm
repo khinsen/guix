@@ -3526,8 +3526,20 @@ and Fortran code, useful linear algebra, Fourier transform, and random number
 capabilities.")
     (license license:bsd-3)))
 
+;; NOTE: The last NumPy release to support Python 2 is 1.16.5.
 (define-public python2-numpy
-  (package-with-python2 python-numpy))
+  (package (inherit (package-with-python2 python-numpy))
+    (version "1.16.5")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append
+             "https://github.com/numpy/numpy/releases/download/v"
+             version "/numpy-" version ".tar.gz"))
+       (file-name (string-append "python2-numpy-" version ".tar.gz"))
+       (sha256
+        (base32
+         "0lg1cycxzi4rvvrd5zxinpdz0ni792fpx6xjd75z1923zcac8qrb"))))))
 
 ;; NOTE: NumPy 1.8 is packaged only for Python 2 because it is of
 ;; interest only for legacy code going back to NumPy's predecessor
