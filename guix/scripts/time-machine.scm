@@ -97,6 +97,6 @@ Execute COMMAND ARGS... in an older version of Guix.\n"))
            (channels     (channel-list opts))
            (command-line (assoc-ref opts 'exec)))
       (when command-line
-        (let* ((directory  (cached-guix-filetree-for-channels channels))
+        (let* ((directory  (cached-channel-instance channels))
                (executable (string-append directory "/bin/guix")))
           (apply execl (cons* executable executable command-line)))))))
