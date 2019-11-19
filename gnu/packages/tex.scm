@@ -6035,19 +6035,16 @@ values (strings, macros, or numbers) pasted together.")
 (define-public biber
   (package
     (name "biber")
-    (version "2.12")
+    (version "2.13")
     (source (origin
               (method git-fetch)
               (uri (git-reference
                     (url "https://github.com/plk/biber/")
                     (commit (string-append "v" version))))
               (file-name (git-file-name name version))
-              ;; TODO: Patch awaiting inclusion upstream (see:
-              ;; https://github.com/plk/biber/issues/239).
-              (patches (search-patches "biber-fix-encoding-write.patch"))
               (sha256
                (base32
-                "1g1hi6zvf2hmrjly1sidjaxy5440gfqm4p7p3n7kayshnjsmlskx"))))
+                "0855nw7cci3812lys20vb3zckyvs5axmyiqa8zf0afsj70kvzj2d"))))
     (build-system perl-build-system)
     (arguments
      `(#:phases
