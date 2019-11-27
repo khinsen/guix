@@ -27,6 +27,7 @@
   #:use-module ((guix licenses)
                 #:select (gpl3+ gpl2+ lgpl2.1+ lgpl2.0+ fdl1.3+))
   #:use-module (gnu packages)
+  #:use-module (gnu packages base)
   #:use-module (gnu packages bootstrap)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages multiprecision)
@@ -648,6 +649,55 @@ as the 'native-search-paths' field."
          (variable "LIBRARY_PATH")
          (files '("lib" "lib64")))))
 
+;; (define (name-and-version->syntax name version)
+;;   (datum->syntax stx
+;;                  (string->symbol
+;;                   (string-append name "-" version))))
+
+;; (define-syntax define-gfortran-version
+;;   (lambda (stx)
+;;     (syntax-case stx ()
+;;       ((_ version)
+;;        (with-syntax ((gfortran-version (name-and-version->syntax
+;;                                         "gfortran" version))
+;;                      (gcc-version (name-and-version->syntax
+;;                                    "gcc" version)))
+;;          #'(define-public gfortran-version
+;;              (custom-gcc gcc-version "gfortran" '("fortran")
+;;                          %generic-search-paths)))))))
+
+;; (define-syntax define-gfortran-toolchain-version
+;;   (lambda (stx)
+;;     (syntax-case stx ()
+;;       ((_ v)
+;;        (with-syntax ((gfortran-version (name-and-version->syntax
+;;                                         "gfortran" v))
+;;                      (toolchain-version (name-and-version->syntax
+;;                                          "gfortran-toolchain" v)))
+;;          #'(define-public toolchain-version
+;;              (package
+;;                (name "gfortran-toolchain")
+;;                (version v)
+;;                (propagated-inputs
+;;                 `(("gfortran" ,gfortran-version)
+;;                   ("binutils" ,binutils)
+;;                   ("glibc" ,glibc))))))))))
+
+;; (define-gfortran-version "4.8")
+;; (define-gfortran-toolchain-version "4.8")
+;; (define-gfortran-version "4.9")
+;; (define-gfortran-toolchain-version "4.9")
+;; (define-gfortran-version "5")
+;; (define-gfortran-toolchain-version "5")
+;; (define-gfortran-version "6")
+;; (define-gfortran-toolchain-version "6")
+;; (define-gfortran-version "7")
+;; (define-gfortran-toolchain-version "7")
+;; (define-gfortran-version "8")
+;; (define-gfortran-toolchain-version "8")
+;; (define-gfortran-version "9")
+;; (define-gfortran-toolchain-version "9")
+
 (define-public gfortran-4.8
   (custom-gcc gcc-4.8 "gfortran" '("fortran")
               %generic-search-paths))
@@ -682,6 +732,14 @@ as the 'native-search-paths' field."
   ;; that is not 'eq?' with GFORTRAN-5, and thus 'fold-packages' would
   ;; report two gfortran@5 that are in fact identical.
   gfortran-7)
+
+(define-public gfortran-toolchain-9
+  (package (inherit gfortran-9)
+    (name "gfortran-toolchain")
+    (propagated-inputs
+     `(("binutils" ,binutils)
+       ;("libc" ,glibc)
+       ,@(package-propagated-inputs gfortran-9)))))
 
 (define-public gccgo-4.9
   (custom-gcc gcc-4.9 "gccgo" '("go")
