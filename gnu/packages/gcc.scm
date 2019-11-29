@@ -1012,3 +1012,73 @@ to be a tutorial of the language.  Rather, it outlines all of the constructs
 of the language.  Library functions are not included.")
     (home-page "https://www.gnu.org/software/gnu-c-manual/")
     (license fdl1.3+)))
+
+
+;;;
+;;; GCC toolchains.
+;;;
+;;; Toolchain packages combine everything needed for compilation,
+;;; and ensure that ld-wrapper comes before binutils' ld in the
+;;; user's profile, as otherwise dynamic library lookup would not
+;;; work correctly.
+
+(define* (make-gcc-toolchain gcc libc)
+  "Return a complete toolchain for GCC targeting LIBC."
+  (package
+    (name (string-append (package-name gcc) "-toolchain"))
+    (version (package-version gcc))
+    (source #f)
+    (build-system trivial-build-system)
+    (arguments
+     '(#:modules ((guix build union))
+       #:builder (begin
+                   (use-modules (ice-9 match)
+                                (srfi srfi-26)
+                                (guix build union))
+
+                   (let ((out (assoc-ref %outputs "out")))
+
+                     (match %build-inputs
+                       (((names . directories) ...)
+                        (union-build out directories)))
+
+                     (union-build (assoc-ref %outputs "debug")
+                                  (list (assoc-ref %build-inputs
+                                                   "libc-debug")))
+                     (union-build (assoc-ref %outputs "static")
+                                  (list (assoc-ref %build-inputs
+                                                   "libc-static")))
+                     #t))))
+
+    (native-search-paths (package-native-search-paths gcc))
+    (search-paths (package-search-paths gcc))
+
+    (license (package-license gcc))
+    (synopsis "Complete GCC tool chain for C/C++ development")
+    (description
+     "This package provides a complete GCC tool chain for C/C++ development to
+be   installed in user profiles.  This includes GCC, as well as libc (headers
+an  d binaries, plus debugging symbols in the @code{debug} output), and Binutils.")
+    (home-page "https://gcc.gnu.org/")
+    (outputs '("out" "debug" "static"))
+
+    (inputs `(("gcc" ,gcc)
+              ("ld-wrapper" ,(car (assoc-ref %final-inputs "ld-wrapper")))
+              ("binutils" ,binutils-final)
+              ("libc" ,libc)
+              ("libc-debug" ,libc "debug")
+              ("libc-static" ,libc "static")))))
+
+
+;; (define (replace-C/C++-by-Fortran string)
+;;   (regexp-substitute/global
+;;    #f
+;;    (regexp-quote "C/C++")
+;;    string
+;;    'pre "Fortran" 'post))
+
+;; (define-public gfortran-toolchain
+;;   (let ((p (make-gcc-toolchain gfortran)))
+;;     (package (inherit p)
+;;       (synopsis (replace-C/C++-by-Fortran (package-synopsis p)))
+;;       (description (replace-C/C++-by-Fortran (package-description p))))))
