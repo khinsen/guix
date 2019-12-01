@@ -556,7 +556,7 @@ large scale eigenvalue problems.")
     (build-system cmake-build-system)
     (home-page "http://www.netlib.org/lapack/")
     (inputs `(("fortran" ,gfortran)
-              ("python" ,python-2)))
+              ("python" ,python-wrapper)))
     (arguments
      `(#:configure-flags (list
                           "-DBUILD_SHARED_LIBS:BOOL=YES"
