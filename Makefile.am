@@ -283,6 +283,7 @@ MODULES =					\
   guix/scripts/container/exec.scm		\
   guix/scripts/deploy.scm			\
   guix/scripts/time-machine.scm			\
+  guix/scripts/run-script.scm			\
   guix.scm					\
   $(GNU_SYSTEM_MODULES)
 

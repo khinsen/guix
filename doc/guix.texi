@@ -235,6 +235,7 @@ Programming Interface
 * The Store Monad::             Purely functional interface to the store.
 * G-Expressions::               Manipulating build expressions.
 * Invoking guix repl::          Fiddling with Guix interactively.
+* Invoking guix run-script::    Running Guix scripts.
 
 Defining Packages
 
@@ -5347,6 +5348,7 @@ package definitions.
 * The Store Monad::             Purely functional interface to the store.
 * G-Expressions::               Manipulating build expressions.
 * Invoking guix repl::          Fiddling with Guix interactively.
+* Invoking guix run-script::    Running Guix scripts.
 @end menu
 
 @node Package Modules
@@ -8119,6 +8121,36 @@ the command-line tool.
 @item -q
 Inhibit loading of the @file{~/.guile} file.  By default, that
 configuration file is loaded when spawning a @code{guile} REPL.
+@end table
+
+@node Invoking guix run-script
+@section Invoking @command{guix run-script}
+
+@cindex script
+
+The @command{guix run-script} command executes a Guile script
+(@pxref{Running Guile Scripts,,, guile, GNU Guile Reference Manual}).
+Compared to just launching the @command{guile} command,
+@command{guix run-script} guarantees that all the Guix modules
+and all its dependencies are available in the search path.
+
+The general syntax is:
+
+@example
+guix run-script @var{options} @var{file}
+@end example
+
+The available options are as follows:
+
+@table @code
+@item --load-path=@var{directory}
+@itemx -L @var{directory}
+Add @var{directory} to the front of the package module search path
+(@pxref{Package Modules}).
+
+@item -q
+Inhibit loading of the @file{~/.guile} file.  By default, that
+configuration file is loaded before executing the script.
 @end table
 
 @c *********************************************************************
