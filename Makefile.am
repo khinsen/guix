@@ -255,6 +255,7 @@ MODULES =					\
   guix/scripts/authenticate.scm			\
   guix/scripts/refresh.scm			\
   guix/scripts/repl.scm				\
+  guix/scripts/run.scm				\
   guix/scripts/describe.scm			\
   guix/scripts/system.scm			\
   guix/scripts/system/search.scm		\

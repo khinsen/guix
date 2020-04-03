@@ -234,7 +234,7 @@ Programming Interface
 * Derivations::                 Low-level interface to package derivations.
 * The Store Monad::             Purely functional interface to the store.
 * G-Expressions::               Manipulating build expressions.
-* Invoking guix repl::          Fiddling with Guix interactively.
+* Invoking guix run::           Programming Guix in Guile
 
 Defining Packages
 
@@ -1154,7 +1154,7 @@ The @command{guix} command must be in the search path on the build
 machines.  You can check whether this is the case by running:
 
 @example
-ssh build-machine guix repl --version
+ssh build-machine guix run --version
 @end example
 
 There is one last thing to do once @file{machines.scm} is in place.  As
@@ -4259,7 +4259,7 @@ revisions in arbitrary ways.
 
 @cindex inferior packages
 Technically, an ``inferior'' is essentially a separate Guix process connected
-to your main Guix process through a REPL (@pxref{Invoking guix repl}).  The
+to your main Guix process through a REPL (@pxref{Invoking guix run}).  The
 @code{(guix inferior)} module allows you to create inferiors and to
 communicate with them.  It also provides a high-level interface to browse and
 manipulate the packages that an inferior provides---@dfn{inferior packages}.
@@ -4318,7 +4318,7 @@ As a side effect, this procedure may build or substitute binaries for
 @deffn {Scheme Procedure} open-inferior @var{directory} @
   [#:command "bin/guix"]
 Open the inferior Guix in @var{directory}, running
-@code{@var{directory}/@var{command} repl} or equivalent.  Return @code{#f} if
+@code{@var{directory}/@var{command} run} or equivalent.  Return @code{#f} if
 the inferior could not be launched.
 @end deffn
 
@@ -5346,7 +5346,8 @@ package definitions.
 * Derivations::                 Low-level interface to package derivations.
 * The Store Monad::             Purely functional interface to the store.
 * G-Expressions::               Manipulating build expressions.
-* Invoking guix repl::          Fiddling with Guix interactively.
+* Invoking guix run::           Programming Guix in Guile
+
 @end menu
 
 @node Package Modules
@@ -8057,25 +8058,43 @@ corresponding to @var{obj} for @var{system}, cross-compiling for
 has an associated gexp compiler, such as a @code{<package>}.
 @end deffn
 
-@node Invoking guix repl
-@section Invoking @command{guix repl}
+@node Invoking guix run
+@section Invoking @command{guix run}
 
-@cindex REPL, read-eval-print loop
-The @command{guix repl} command spawns a Guile @dfn{read-eval-print loop}
-(REPL) for interactive programming (@pxref{Using Guile Interactively,,, guile,
-GNU Guile Reference Manual}).  Compared to just launching the @command{guile}
-command, @command{guix repl} guarantees that all the Guix modules and all its
-dependencies are available in the search path.  You can use it this way:
+@cindex script, REPL, read-eval-print loop
+The @command{guix run} command makes it easier to program Guix in Guile,
+either by running Guile scripts (@pxref{Running Guile Scripts,,, guile,
+GNU Guile Reference Manual}) or by launching a Guile
+@dfn{read-eval-print loop} (REPL) for interactive programming
+(@pxref{Using Guile Interactively,,, guile, GNU Guile Reference Manual}).
+Compared to just launching the @command{guile}
+command, @command{guix run} guarantees that all the Guix modules and all its
+dependencies are available in the search path.
+
+The general syntax is:
 
 @example
-$ guix repl
+guix run @var{options} @var{file}
+@end example
+
+When a @var{file} argument is provided, @var{file} is executed as a Guile
+script:
+
+@example
+$ guix run my-script.scm
+@end example
+
+Otherwise a Guile REPL is started:
+
+@example
+$ guix run
 scheme@@(guile-user)> ,use (gnu packages base)
 scheme@@(guile-user)> coreutils
 $1 = #<package coreutils@@8.29 gnu/packages/base.scm:327 3e28300>
 @end example
 
 @cindex inferiors
-In addition, @command{guix repl} implements a simple machine-readable REPL
+In addition, @command{guix run} implements a simple machine-readable REPL
 protocol for use by @code{(guix inferior)}, a facility to interact with
 @dfn{inferiors}, separate processes running a potentially different revision
 of Guix.
@@ -8114,7 +8133,7 @@ Add @var{directory} to the front of the package module search path
 (@pxref{Package Modules}).
 
 This allows users to define their own packages and make them visible to
-the command-line tool.
+the script or command-line tool.
 
 @item -q
 Inhibit loading of the @file{~/.guile} file.  By default, that
