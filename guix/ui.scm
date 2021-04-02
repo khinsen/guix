@@ -44,6 +44,8 @@
   #:use-module (guix packages)
   #:use-module (guix profiles)
   #:use-module (guix derivations)
+  #:use-module (guix channels)
+  #:use-module (guix describe)
   #:use-module (guix build-system)
   #:use-module (guix serialization)
   #:use-module ((guix licenses)
@@ -1538,6 +1540,8 @@ HYPERLINKS? is true, emit hyperlink escape sequences when appropriate."
           (match (package-direct-inputs p)
             (((labels inputs . _) ...)
              (dependencies->recutils (filter package? inputs)))))
+  (format port "channels: ~a~%"
+          (string-join (map channel-name (package-channels p))))
   (format port "location: ~a~%"
           (or (and=> (package-location p)
                      (if hyperlinks? location->hyperlink location->string))
